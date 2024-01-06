@@ -34,4 +34,5 @@ Config = {
             heading =  209.38,
             menu = ""
         },
+    }
 }
