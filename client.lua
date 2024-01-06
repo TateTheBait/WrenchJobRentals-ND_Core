@@ -117,16 +117,15 @@ function getcars(location)
             local sruncount = 0
             for _, job in pairs(location.jobs) do
                 if tostring(PJob) == tostring(job) then
-                        print("Valid Job for " .. location.name)
+                       
                         for _, i in pairs(location.categories) do
-                                print("I: " .. tostring(i))       
+                                
                                 for _, car in pairs(Config.cars[i]) do
                                         cartable[#cartable + 1] = (car)
                                 end
                                 for id, car in pairs(cartable) do
                                     if type(car) ~= "boolean" then
-                                        print(car.name)
-                                        print(location.vehspawnlocation)
+                              
                                         cars[#cars + 1] = {
                                             title = car.name,
                                             onSelect = function(args)
@@ -205,7 +204,7 @@ for _, location in pairs(Config.locations) do
         end
     end
         if isgood == true then
-            print("creating ped at " .. location.name)
+           
             RequestModel( GetHashKey( "a_m_y_smartcaspat_01") )
             while ( not HasModelLoaded(GetHashKey("a_m_y_smartcaspat_01"))) do
                 Citizen.Wait(1)
@@ -219,7 +218,7 @@ for _, location in pairs(Config.locations) do
             local optio = {
                 label = "Open Menu",
                 onSelect = function()
-                    print(location.name)
+                  
                     lib.showContext(tostring(location.name) .. '_menu')
                 end,
                 icon = "car-rear"
@@ -227,7 +226,7 @@ for _, location in pairs(Config.locations) do
             Targets[location.name] = exports.ox_target:addLocalEntity(ped, optio)
             Targets[location.name] = exports.ox_target:addLocalEntity(ped, RETURNVEHICLE)
             
-            print("Making Target at " .. location.name)
+            
      end
 end
 
