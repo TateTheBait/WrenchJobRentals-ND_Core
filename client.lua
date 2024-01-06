@@ -1,5 +1,3 @@
-NDCore = exports["ND_Core"]:GetCoreObject()
-
 Distcount = 1
 
 Targets = {}
