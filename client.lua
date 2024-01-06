@@ -1,3 +1,6 @@
+NDCore = exports["ND_Core"]:GetCoreObject()
+
+
 Distcount = 1
 
 Targets = {}
@@ -83,7 +86,7 @@ AddEventHandler("carRental:confirm", function(table)
             TriggerServerEvent("Sold", tbl)
             lib.hideTextUI()
             selectedcar = nil 
-            rentedcars[vehicle] = veh
+            rentedcars.vehicle = veh
         end
 end)
 
@@ -166,7 +169,7 @@ end
 RETURNVEHICLE = {
     label = "Return Last Vehicle",
     onSelect = function()
-            if rentedcars[vehicle] then
+            if rentedcars.vehicle then
                 if GetVehicleBodyHealth(VEHICLE) >= 300 and DoesEntityExist(VEHICLE) then
                     TriggerServerEvent("Returned", Source, SelectedCar.price, rentedcars[vehicle], true, Netid)
                     lib.notify({
