@@ -23,12 +23,6 @@ AddEventHandler("carRental:pay", function(id, table)
     end
 end)
 
-function func(src)
-    TriggerClientEvent("Registered")
-end
-
-RegisterCommand("registerleo", func, false)
-
 function jobHasAccess(job, info)
     if not info.jobs then return true end
     for _, jobName in pairs(info.jobs) do
