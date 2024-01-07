@@ -27,6 +27,7 @@ Config = {
     locations = {
         ["BCSO"] = {
             pedlocation = vector3(1872.59, 3692.98, 33.54),
+            pedhash = "a_m_y_smartcaspat_01",
             vehspawnlocation = vector4(1862.36, 3681.51, 33.74, 211.50),
             jobs = {"BCSO"},
             name = "BCSO",
