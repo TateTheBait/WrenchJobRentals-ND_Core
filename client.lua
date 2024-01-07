@@ -37,19 +37,19 @@ RegisterNetEvent("carRental:confirm")
 AddEventHandler("carRental:confirm", function(table)
     if not selectedcar then return end
         local veh = 0
-        local cat = Config.cars[table.category]
-        local car = cat[selectedcar]
-        SelectedCar = cat[selectedcar]
+        local car = table.car
+        SelectedCar = table.car
         RequestModel(car.hash)
         while not HasModelLoaded(car.hash) do
-            lib.notify({
-                id = "CARLOADING:WRENCHLEO",
-                title = "Wrench Leo Rental",
-                description = "Your Car is LOADING, do not spawn another until this message goes away!!!",
-                icon = "hand-fist",
-            })
             Wait(10)
         end
+        lib.notify({
+            id = "CARLOADING:WRENCHLEO",
+            title = "Wrench Leo Rental",
+            description = "Your Car has loaded!",
+            icon = "hand-fist",
+            duration = 2000
+        })
         if table.x == nil or table.y == nil or table.z == nil then
             veh = CreateVehicle(car.hash, table.location.x, table.location.y, table.location.z, table.location.w, true, false)
         elseif table.location.x ~= 0 and table.location.x ~= 0 and table.location.x ~= 0 then
@@ -78,8 +78,8 @@ AddEventHandler("carRental:confirm", function(table)
             local tbl = {
                 veh = netid,
                 src = GetPlayerServerId(PlayerId()),
-                ndsrc = NDCore.getPlayer().source
             }
+            Wait(200)
             TriggerServerEvent("Sold", tbl)
             lib.hideTextUI()
             selectedcar = nil 
@@ -132,7 +132,7 @@ function getcars(location)
                                                 selectedcar = id
                                                 local tbl = {
                                                     location = location.vehspawnlocation,
-                                                    category = i,
+                                                    car = Config.cars[i][id],
                                                     plrid = GetPlayerServerId(PlayerId())
                                                 }
                                                     TriggerServerEvent("carRental:pay", id, tbl)
