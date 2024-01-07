@@ -42,6 +42,12 @@ AddEventHandler("carRental:confirm", function(table)
         SelectedCar = cat[selectedcar]
         RequestModel(car.hash)
         while not HasModelLoaded(car.hash) do
+            lib.notify({
+                id = "CARLOADING:WRENCHLEO",
+                title = "Wrench Leo Rental",
+                description = "Your Car is LOADING, do not spawn another until this message goes away!!!",
+                icon = "hand-fist",
+            })
             Wait(10)
         end
         if table.x == nil or table.y == nil or table.z == nil then
