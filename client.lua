@@ -220,7 +220,6 @@ end
 
 RegisterNetEvent("ND:characterLoaded")
 AddEventHandler("ND:characterLoaded", function()
-    print("LOADED")
     peds()
 end)
 
