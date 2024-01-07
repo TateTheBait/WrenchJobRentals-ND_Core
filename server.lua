@@ -1,31 +1,28 @@
 RegisterNetEvent("carRental:pay")
 AddEventHandler("carRental:pay", function(id, table)
     if table ~= nil then
-        local cat = Config.cars[table.category]
-        local car = cat[id]
+        local car = table.car
+        print(car.price)
+        print(table.plrid)
         if not car then return end
         local src = table.plrid
-        local player = NDCore.getPlayer(table.plrid)
-        if player.cash >= car.price then
-            player.deductMoney(car.price, src, "cash")
-            TriggerClientEvent("carRental:confirm", src, table)
-            return
-        elseif player.bank >= car.price then
-            player.deductMoney(car.price, src, "bank")
-            TriggerClientEvent("carRental:confirm", src, table)
-        elseif player.cash < car.price or player.bank < car.price then
-            TriggerClientEvent("poor", id)
-            return
-        end    
-        TriggerClientEvent("carRental:deny", src)
+        local player = NDCore.getPlayer(src)
+        if player then
+            if player.cash >= car.price then
+                player.deductMoney(car.price, player.source, "cash")
+                TriggerClientEvent("carRental:confirm", src, table)
+                return
+            elseif player.bank >= car.price then
+                player.deductMoney(car.price, player.source, "bank")
+                TriggerClientEvent("carRental:confirm", src, table)
+            elseif player.cash < car.price or player.bank < car.price then
+                TriggerClientEvent("poor", id)
+                return
+            end    
+            TriggerClientEvent("carRental:deny", src)
+        end
     end
 end)
-
-function func(src)
-    TriggerClientEvent("Registered")
-end
-
-RegisterCommand("registerleo", func, false)
 
 function jobHasAccess(job, info)
     if not info.jobs then return true end
