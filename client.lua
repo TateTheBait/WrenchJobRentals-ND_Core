@@ -1,24 +1,8 @@
-selectedcar = 0
+local selectedcar = 0
 
-rentedcars = {}
+local rentedcars = {}
 
-Distcount = 1
-
-Targets = {}
-
-Peds = {}
-
-Jobs = {}
-Location = {}
-
-Runcount = 0
-
-for _, location in pairs(Config.locations) do
-    for _, fjob in pairs(location.jobs) do
-        Jobs[#Jobs+1] = fjob
-    end
-    Location[#Location+1] = location
-end
+local Peds = {}
 
 
 RegisterNetEvent("poor")
@@ -41,26 +25,9 @@ AddEventHandler("carRental:confirm", function(table)
         while not HasModelLoaded(car.hash) do
             Wait(10)
         end
-        lib.notify({
-            id = "CARLOADING:WRENCHLEO",
-            title = "Wrench Leo Rental",
-            description = "Your Car has loaded!",
-            icon = "hand-fist",
-            duration = 2000
-        })
-        if table.x == nil or table.y == nil or table.z == nil then
-            veh = CreateVehicle(car.hash, table.location.x, table.location.y, table.location.z, table.location.w, true, false)
-        elseif table.location.x ~= 0 and table.location.x ~= 0 and table.location.x ~= 0 then
-            veh = CreateVehicle(car.hash, table.location.x, table.location.y, table.location.z, table.location.w, true, false)
-        else
-            veh = CreateVehicle(car.hash, pedCoords.x, pedCoords.y-5, pedCoords.z, GetEntityHeading(ped), true, false)
-        end
+        veh = CreateVehicle(car.hash, table.location.x, table.location.y, table.location.z, table.location.w, true, false)
         for num=1, 14 do 
-            SetVehicleExtra(
-                veh --[[ Vehicle ]], 
-                num --[[ integer ]], 
-                1 --[[ boolean ]]
-            )
+            SetVehicleExtra(veh, num , 1)
         end
         VEHICLE = veh
         SetVehicleEngineOn(veh, true, true, false)
@@ -68,7 +35,7 @@ AddEventHandler("carRental:confirm", function(table)
             SetVehicleDirtLevel(veh, 0.00)
             lib.notify({
                 title = "Wrench Leo Rental",
-                description = "Successfully rented vehicle!",
+                description = "Successfully rented vehicle for $" .. tostring(car.price) .. "!",
                 icon = "hand-fist",
             })
             local netid = NetworkGetNetworkIdFromEntity(veh)
@@ -191,13 +158,8 @@ function peds()
             end
         end
             if isgood == true then
-               
-                RequestModel( GetHashKey( "a_m_y_smartcaspat_01") )
-                while ( not HasModelLoaded(GetHashKey("a_m_y_smartcaspat_01"))) do
-                    Citizen.Wait(1)
-                end
-                local model = GetHashKey(location.pedhash)
-                ped = CreatePed(4, model, location.pedlocation.x, location.pedlocation.y, location.pedlocation.z-1, location.heading, false, false)
+                local model = lib.requestModel(location.pedhash)
+                local ped = CreatePed(4, model, location.pedlocation.x, location.pedlocation.y, location.pedlocation.z-1, location.heading, false, false)
                 FreezeEntityPosition(ped, true)
                 SetEntityInvincible(created_ped, true)
                 SetBlockingOfNonTemporaryEvents(ped, true)
@@ -210,8 +172,8 @@ function peds()
                     end,
                     icon = "car-rear"
                   }
-                Targets[location.name] = exports.ox_target:addLocalEntity(ped, optio)
-                Targets[location.name] = exports.ox_target:addLocalEntity(ped, RETURNVEHICLE)
+                exports.ox_target:addLocalEntity(ped, optio)
+                exports.ox_target:addLocalEntity(ped, RETURNVEHICLE)
                 
                 Peds[#Peds+1] = ped
          end
