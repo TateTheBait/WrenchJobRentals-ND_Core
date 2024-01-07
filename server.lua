@@ -1,5 +1,3 @@
-NDCore = exports["ND_Core"]:GetCoreObject()
-
 RegisterNetEvent("carRental:pay")
 AddEventHandler("carRental:pay", function(id, table)
     if table ~= nil then
@@ -22,6 +20,12 @@ AddEventHandler("carRental:pay", function(id, table)
         TriggerClientEvent("carRental:deny", src)
     end
 end)
+
+function func(src)
+    TriggerClientEvent("Registered")
+end
+
+RegisterCommand("registerleo", func, false)
 
 function jobHasAccess(job, info)
     if not info.jobs then return true end
@@ -47,6 +51,5 @@ end)
 RegisterNetEvent("Sold", function (tbl)
     local netid = NetworkGetEntityFromNetworkId(tbl.veh)
     print(tostring(tbl.src) .. " Rented an LEO Vehicle")
-    local srcv = NDCore.Functions.GetPlayer(tbl.src)
-    NDCore.giveVehicleAccess(tbl.src, netid, true)
+    NDCore.giveVehicleAccess(tonumber(tbl.src), netid, true)
 end)
