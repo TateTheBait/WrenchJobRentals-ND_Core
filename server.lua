@@ -2,8 +2,6 @@ RegisterNetEvent("carRental:pay")
 AddEventHandler("carRental:pay", function(id, table)
     if table ~= nil then
         local car = table.car
-        print(car.price)
-        print(table.plrid)
         if not car then return end
         local src = table.plrid
         local player = NDCore.getPlayer(src)
