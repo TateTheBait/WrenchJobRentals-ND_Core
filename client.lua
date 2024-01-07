@@ -2,6 +2,8 @@ NDCore = exports["ND_Core"]:GetCoreObject()
 
 selectedcar = 0
 
+rentedcars = {}
+
 Distcount = 1
 
 Targets = {}
@@ -50,6 +52,13 @@ AddEventHandler("carRental:confirm", function(table)
             veh = CreateVehicle(car.hash, table.location.x, table.location.y, table.location.z, table.location.w, true, false)
         else
             veh = CreateVehicle(car.hash, pedCoords.x, pedCoords.y-5, pedCoords.z, GetEntityHeading(ped), true, false)
+        end
+        for num=1, 14 do 
+            SetVehicleExtra(
+                veh --[[ Vehicle ]], 
+                num --[[ integer ]], 
+                1 --[[ boolean ]]
+            )
         end
         VEHICLE = veh
         SetVehicleEngineOn(veh, true, true, false)
@@ -220,6 +229,7 @@ end
 
 RegisterNetEvent("ND:characterLoaded")
 AddEventHandler("ND:characterLoaded", function()
+    print("LOADED")
     peds()
 end)
 
