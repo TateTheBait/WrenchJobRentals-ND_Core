@@ -1,5 +1,3 @@
-NDCore = exports["ND_Core"]:GetCoreObject()
-
 selectedcar = 0
 
 rentedcars = {}
@@ -63,6 +61,7 @@ AddEventHandler("carRental:confirm", function(table)
         VEHICLE = veh
         SetVehicleEngineOn(veh, true, true, false)
         if DoesEntityExist(veh) then     
+            SetVehicleDirtLevel(veh, 0.00)
             lib.notify({
                 title = "Wrench Leo Rental",
                 description = "Successfully rented vehicle!",
@@ -145,30 +144,19 @@ function getcars(location)
             return(Cars)
 end
 
-
-
-
-for _, location in pairs(Config.locations) do
-    location.menu = lib.registerContext({
-        id = tostring(location.name) .. '_menu',
-        title = location.name .. " Rental",
-        options = getcars(location),
-    })
-end
-
 RETURNVEHICLE = {
     label = "Return Last Vehicle",
     onSelect = function()
             if rentedcars.vehicle then
                 if GetVehicleBodyHealth(VEHICLE) >= 300 and DoesEntityExist(VEHICLE) then
-                    TriggerServerEvent("Returned", Source, SelectedCar.price, rentedcars[vehicle], true, Netid)
+                    TriggerServerEvent("Returned", GetPlayerServerId(PlayerId()), SelectedCar.price, rentedcars[vehicle], true, Netid)
                     lib.notify({
                         title = "Wrench Leo Rental",
                         description = "Thank you for returning your vehicle.",
                         icon = "hand-fist",
                     })
                 else
-                    TriggerServerEvent("Returned", Source, SelectedCar.price, rentedcars[vehicle], false, Netid)
+                    TriggerServerEvent("Returned", GetPlayerServerId(PlayerId()), SelectedCar.price, rentedcars[vehicle], false, Netid)
                     lib.notify({
                         title = "Wrench Leo Rental",
                         description = "Your car is severely damaged or has been destroyed, please repair it before returning next time!",
@@ -205,7 +193,7 @@ function peds()
                 while ( not HasModelLoaded(GetHashKey("a_m_y_smartcaspat_01"))) do
                     Citizen.Wait(1)
                 end
-                local model = GetHashKey("a_m_y_smartcaspat_01")
+                local model = GetHashKey(location.pedhash)
                 ped = CreatePed(4, model, location.pedlocation.x, location.pedlocation.y, location.pedlocation.z-1, location.heading, false, false)
                 FreezeEntityPosition(ped, true)
                 SetEntityInvincible(created_ped, true)
@@ -229,10 +217,20 @@ end
 
 RegisterNetEvent("ND:characterLoaded")
 AddEventHandler("ND:characterLoaded", function()
-    print("LOADED")
+    for _, location in pairs(Config.locations) do
+        location.menu = lib.registerContext({
+            id = tostring(location.name) .. '_menu',
+            title = location.name .. " Rental",
+            options = getcars(location),
+        })
+    end
     peds()
 end)
 
 RegisterCommand("fixinventory", function ()
     NDCore.revivePlayer(false, false)
 end)
+
+if NDCore.getPlayer().job then
+    peds()
+end
