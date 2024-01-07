@@ -1,5 +1,3 @@
--- For support join my discord: https://discord.gg/mBCmMSVcvJ
-
 author "The Wrench"
 description "Leo car renting"
 version "1.0"
@@ -10,12 +8,12 @@ lua54 "yes"
 
 shared_script {
     '@ox_lib/init.lua',
+    '@ND_Core/init.lua',
     "config.lua"
 }
 server_scripts {"server.lua"}
 client_scripts {
     "client.lua",
-    "functions.lua",
 }
 
 dependencies {
