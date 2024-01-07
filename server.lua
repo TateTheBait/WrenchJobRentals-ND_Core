@@ -7,11 +7,11 @@ AddEventHandler("carRental:pay", function(id, table)
         local player = NDCore.getPlayer(src)
         if player then
             if player.cash >= car.price then
-                player.deductMoney(car.price, player.source, "cash")
+                player.deductMoney("cash", car.price, "Car Rental")
                 TriggerClientEvent("carRental:confirm", src, table)
                 return
             elseif player.bank >= car.price then
-                player.deductMoney(car.price, player.source, "bank")
+                player.deductMoney("bank", car.price, "Car Rental")
                 TriggerClientEvent("carRental:confirm", src, table)
             elseif player.cash < car.price or player.bank < car.price then
                 TriggerClientEvent("poor", id)
