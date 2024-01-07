@@ -26,8 +26,14 @@ AddEventHandler("carRental:confirm", function(table)
             Wait(10)
         end
         veh = CreateVehicle(car.hash, table.location.x, table.location.y, table.location.z, table.location.w, true, false)
-        for num=1, 14 do 
-            SetVehicleExtra(veh, num , 1)
+        if car.vehicleextras then
+            for eid, extra in pairs(car.vehicleextras) do
+                SetVehicleExtra(veh, eid, extra)
+            end
+        else
+            for num=1, 14 do 
+                SetVehicleExtra(veh, num , 1)
+            end
         end
         VEHICLE = veh
         SetVehicleEngineOn(veh, true, true, false)
