@@ -168,7 +168,7 @@ function peds()
         end
             if isgood == true then
                 local model = lib.requestModel(location.pedhash)
-                local ped = CreatePed(4, model, location.pedlocation.x, location.pedlocation.y, location.pedlocation.z-1, location.heading, false, false)
+                local ped = CreatePed(4, model, location.pedlocation.x, location.pedlocation.y, location.pedlocation.z-1, location.pedlocation.w, false, false)
                 FreezeEntityPosition(ped, true)
                 SetEntityInvincible(created_ped, true)
                 SetBlockingOfNonTemporaryEvents(ped, true)
