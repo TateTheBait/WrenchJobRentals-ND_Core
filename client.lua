@@ -232,10 +232,9 @@ RegisterCommand("fixinventory", function ()
 end)
 
 local checkplayer = NDCore.getPlayer()
-local plrjob = checkplayer.job
 
 
-if plrjob then
+if checkplayer then
     for _, location in pairs(Config.locations) do
         location.menu = lib.registerContext({
             id = tostring(location.name) .. '_menu',
