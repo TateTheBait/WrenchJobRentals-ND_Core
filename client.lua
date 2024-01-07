@@ -35,6 +35,9 @@ AddEventHandler("carRental:confirm", function(table)
                 SetVehicleExtra(veh, num , 1)
             end
         end
+        if car.livery then
+            SetVehicleLivery(veh, car.livery)
+        end
         VEHICLE = veh
         SetVehicleEngineOn(veh, true, true, false)
         if DoesEntityExist(veh) then     
