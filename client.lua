@@ -1,29 +1,12 @@
 NDCore = exports["ND_Core"]:GetCoreObject()
 
+selectedcar = 0
 
 Distcount = 1
 
 Targets = {}
 
-
-local selectedcar
-local ped
-local pedCoords
-local rentedcars = {}
-while NDCore.getPlayer() == nil do
-    SelectedCharacter = NDCore.getPlayer()
-    Wait(1000)
-end
-Wait(500)
-SelectedCharacter = NDCore.getPlayer()
-NDCHAR = NDCore.getPlayer()
-PJob = tostring(SelectedCharacter.job)
-Category = PJob
-HasId = true
-local plrid = PlayerId()
-Source = GetPlayerServerId(plrid)
-local ped = GetPlayerPed(PlayerId())
-pedCoords = GetEntityCoords(ped)
+Peds = {}
 
 Jobs = {}
 Location = {}
@@ -81,7 +64,7 @@ AddEventHandler("carRental:confirm", function(table)
             local tbl = {
                 veh = netid,
                 src = GetPlayerServerId(PlayerId()),
-                ndsrc = NDCHAR.source
+                ndsrc = NDCore.getPlayer().source
             }
             TriggerServerEvent("Sold", tbl)
             lib.hideTextUI()
@@ -119,7 +102,7 @@ function getcars(location)
     local tcartable = {}
             local sruncount = 0
             for _, job in pairs(location.jobs) do
-                if tostring(PJob) == tostring(job) then
+                if tostring(NDCore.getPlayer().job) == tostring(job) then
                        
                         for _, i in pairs(location.categories) do
                                 
@@ -132,15 +115,13 @@ function getcars(location)
                                         cars[#cars + 1] = {
                                             title = car.name,
                                             onSelect = function(args)
-                                                if HasId == true then
-                                                    selectedcar = id
-                                                    local tbl = {
-                                                        location = location.vehspawnlocation,
-                                                        category = i,
-                                                        plrid = GetPlayerServerId(PlayerId())
-                                                    }
+                                                selectedcar = id
+                                                local tbl = {
+                                                    location = location.vehspawnlocation,
+                                                    category = i,
+                                                    plrid = GetPlayerServerId(PlayerId())
+                                                }
                                                     TriggerServerEvent("carRental:pay", id, tbl)
-                                                end
                                             end,
                                             metadata = {
                                                 {label = 'Deposit', value = car.price},
@@ -198,40 +179,50 @@ RETURNVEHICLE = {
         icon = "caret-right"
   }
 
-
-for _, location in pairs(Config.locations) do
-    local isgood = false
-    for _, job in pairs(location.jobs) do
-        if PJob == tostring(job) then
-            isgood = true
-        end
+function peds()
+    for _, ped in pairs(Peds) do
+        DeletePed(ped)
     end
-        if isgood == true then
-           
-            RequestModel( GetHashKey( "a_m_y_smartcaspat_01") )
-            while ( not HasModelLoaded(GetHashKey("a_m_y_smartcaspat_01"))) do
-                Citizen.Wait(1)
+    for _, location in pairs(Config.locations) do
+        local isgood = false
+        for _, job in pairs(location.jobs) do
+            if NDCore.getPlayer().job == tostring(job) then
+                isgood = true
             end
-            local model = GetHashKey("a_m_y_smartcaspat_01")
-            ped = CreatePed(4, model, location.pedlocation.x, location.pedlocation.y, location.pedlocation.z-1, location.heading, false, false)
-            FreezeEntityPosition(ped, true)
-            SetEntityInvincible(created_ped, true)
-            SetBlockingOfNonTemporaryEvents(ped, true)
-            TaskStartScenarioInPlace(ped, "WORLD_HUMAN_COP_IDLES", 0, true)
-            local optio = {
-                label = "Open Menu",
-                onSelect = function()
-                  
-                    lib.showContext(tostring(location.name) .. '_menu')
-                end,
-                icon = "car-rear"
-              }
-            Targets[location.name] = exports.ox_target:addLocalEntity(ped, optio)
-            Targets[location.name] = exports.ox_target:addLocalEntity(ped, RETURNVEHICLE)
-            
-            
-     end
+        end
+            if isgood == true then
+               
+                RequestModel( GetHashKey( "a_m_y_smartcaspat_01") )
+                while ( not HasModelLoaded(GetHashKey("a_m_y_smartcaspat_01"))) do
+                    Citizen.Wait(1)
+                end
+                local model = GetHashKey("a_m_y_smartcaspat_01")
+                ped = CreatePed(4, model, location.pedlocation.x, location.pedlocation.y, location.pedlocation.z-1, location.heading, false, false)
+                FreezeEntityPosition(ped, true)
+                SetEntityInvincible(created_ped, true)
+                SetBlockingOfNonTemporaryEvents(ped, true)
+                TaskStartScenarioInPlace(ped, "WORLD_HUMAN_COP_IDLES", 0, true)
+                local optio = {
+                    label = "Open Menu",
+                    onSelect = function()
+                      
+                        lib.showContext(tostring(location.name) .. '_menu')
+                    end,
+                    icon = "car-rear"
+                  }
+                Targets[location.name] = exports.ox_target:addLocalEntity(ped, optio)
+                Targets[location.name] = exports.ox_target:addLocalEntity(ped, RETURNVEHICLE)
+                
+                Peds[#Peds+1] = ped
+         end
+    end
 end
+
+RegisterNetEvent("ND:characterLoaded")
+AddEventHandler("ND:characterLoaded", function()
+    print("LOADED")
+    peds()
+end)
 
 RegisterCommand("fixinventory", function ()
     NDCore.revivePlayer(false, false)
