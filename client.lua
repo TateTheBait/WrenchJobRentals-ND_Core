@@ -170,7 +170,6 @@ RETURNVEHICLE = {
                     })
                 end
                 rentedcars = {}
-                exports.ox_target:removeLocalEntity(ped)
             else
                 lib.notify({
                     title = "Wrench Leo Rental",
