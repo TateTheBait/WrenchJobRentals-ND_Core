@@ -232,5 +232,12 @@ RegisterCommand("fixinventory", function ()
 end)
 
 if NDCore.getPlayer().job then
+    for _, location in pairs(Config.locations) do
+        location.menu = lib.registerContext({
+            id = tostring(location.name) .. '_menu',
+            title = location.name .. " Rental",
+            options = getcars(location),
+        })
+    end
     peds()
 end
