@@ -13,8 +13,6 @@ Location = {}
 
 Runcount = 0
 
-Wait(1000)
-
 for _, location in pairs(Config.locations) do
     for _, fjob in pairs(location.jobs) do
         Jobs[#Jobs+1] = fjob
