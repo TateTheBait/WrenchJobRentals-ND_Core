@@ -1,5 +1,3 @@
-local selectedcar = 0
-
 local rentedcars = {}
 
 local Peds = {}
@@ -17,7 +15,6 @@ end)
 
 RegisterNetEvent("carRental:confirm")
 AddEventHandler("carRental:confirm", function(table)
-    if not selectedcar then return end
         local veh = 0
         local car = table.car
         SelectedCar = table.car
@@ -51,22 +48,20 @@ AddEventHandler("carRental:confirm", function(table)
             Netid = netid
             local tbl = {
                 veh = netid,
-                src = GetPlayerServerId(PlayerId()),
+                src = cache.serverId,
             }
             Wait(200)
             TriggerServerEvent("Sold", tbl)
             lib.hideTextUI()
-            selectedcar = nil 
             rentedcars.vehicle = veh
         end
 end)
 
 RegisterNetEvent("carRental:deny")
 AddEventHandler("carRental:deny", function()
-    if not SelectedCar then return end
+    if not rentedcars.vehicle then return end
     local cat = Config.cars[Category]
     local car = cat[SelectedCar]
-    selectedcar = nil 
     lib.notify({
         title = 'Purchase Error',
         description = 'Not enough cash. - $' .. car.price .. " needed.",
@@ -103,11 +98,10 @@ function getcars(location)
                                         cars[#cars + 1] = {
                                             title = car.name,
                                             onSelect = function(args)
-                                                selectedcar = id
                                                 local tbl = {
                                                     location = location.vehspawnlocation,
                                                     car = Config.cars[i][id],
-                                                    plrid = GetPlayerServerId(PlayerId())
+                                                    plrid = cache.serverId
                                                 }
                                                     TriggerServerEvent("carRental:pay", id, tbl)
                                             end,
@@ -129,14 +123,14 @@ RETURNVEHICLE = {
     onSelect = function()
             if rentedcars.vehicle then
                 if GetVehicleBodyHealth(VEHICLE) >= 300 and DoesEntityExist(VEHICLE) then
-                    TriggerServerEvent("Returned", GetPlayerServerId(PlayerId()), SelectedCar.price, rentedcars[vehicle], true, Netid)
+                    TriggerServerEvent("Returned", cache.serverId, SelectedCar.price, rentedcars.vehicle, true, Netid)
                     lib.notify({
                         title = "Wrench Leo Rental",
                         description = "Thank you for returning your vehicle.",
                         icon = "hand-fist",
                     })
                 else
-                    TriggerServerEvent("Returned", GetPlayerServerId(PlayerId()), SelectedCar.price, rentedcars[vehicle], false, Netid)
+                    TriggerServerEvent("Returned", cache.serverId, SelectedCar.price, rentedcars.vehicle, false, Netid)
                     lib.notify({
                         title = "Wrench Leo Rental",
                         description = "Your car is severely damaged or has been destroyed, please repair it before returning next time!",
