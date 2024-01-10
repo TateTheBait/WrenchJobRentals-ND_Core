@@ -1,6 +1,6 @@
 author "The Wrench"
 description "Leo car renting"
-version "1.0"
+version "1.5"
 
 fx_version "cerulean"
 game "gta5"
