@@ -80,60 +80,51 @@ function getcars(location)
     local cars = {}
     local cartable = {}
     Locationtbl = {}
-            local sruncount = 0
-            for _, job in pairs(location.jobs) do
-                if tostring(NDCore.getPlayer().job) == tostring(job) then
-                        for _, i in pairs(location.categories) do
-                                    for _, car in pairs(Config.cars[i]) do
-                                        if type(car) ~= "boolean" then
-                                            if car.ranks then
-                                                    for _, rank in pairs(car.ranks) do
-                                                        if not car.hasrun then
-                                                            if NDCore.getPlayer().job.rankName == rank then
-                                                                car.hasrun = true
-                                                                cartable[#cartable + 1] = (car)
-                                                            end
-                                                        end
-                                                    end
-                                                end
-                                            else
-                                                for _, car in pairs(Config.cars[i]) do
-                                                    if type(car) ~= "boolean" then
-                                                        if not car.hasrun then
-                                                            car.hasrun = true
-                                                            cartable[#cartable + 1] = (car)
-                                                        end
-                                                    end
-                                                end
-                                            end
-                                        end
+    for _, job in pairs(location.jobs) do
+        if tostring(NDCore.getPlayer().job) == tostring(job) then
+            for _, i in pairs(location.categories) do
+                for _, car in pairs(Config.cars[i]) do
+                        if car.ranks then
+                            for _, rank in pairs(car.ranks) do
+                                if not car.hasrun then
+                                    if NDCore.getPlayer().job.rankName == rank then
+                                        car.hasrun = true
+                                        cartable[#cartable + 1] = (car)
                                     end
-                                
-                                for id, car in pairs(cartable) do
-                                    if type(car) ~= "boolean" then
-                              
-                                        cars[#cars + 1] = {
-                                            title = car.name,
-                                            onSelect = function(args)
-                                                local tbl = {
-                                                    location = location.vehspawnlocation,
-                                                    car = Config.cars[i][id],
-                                                    plrid = cache.serverId
-                                                }
-                                                    TriggerServerEvent("carRental:pay", id, tbl)
-                                            end,
-                                            metadata = {
-                                                {label = 'Deposit', value = car.price},
-                                            }
-                                        }
                                 end
                             end
-                                Cars = cars
+                        else
+                            for _, car in pairs(Config.cars[i]) do
+                                if not car.hasrun then
+                                    car.hasrun = true
+                                    cartable[#cartable + 1] = (car)
+                                end
                             end
                         end
                     end
-            return(Cars)
+                for id, car in pairs(cartable) do
+                        cars[#cars + 1] = {
+                            title = car.name,
+                            onSelect = function()
+                                local tbl = {
+                                    location = location.vehspawnlocation,
+                                    car = Config.cars[i][id],
+                                    plrid = cache.serverId
+                                }
+                                TriggerServerEvent("carRental:pay", id, tbl)
+                            end,
+                            metadata = {
+                                {label = 'Deposit', value = car.price},
+                            }
+                        }
+                end
+            end
+        end
+    end
+    Wait(300)
+    return(cars)
 end
+
 
 RETURNVEHICLE = {
     label = "Return Last Vehicle",
@@ -187,7 +178,6 @@ function peds()
                 local optio = {
                     label = "Open Menu",
                     onSelect = function()
-                      
                         lib.showContext(tostring(location.name) .. '_menu')
                     end,
                     icon = "car-rear"
@@ -221,7 +211,7 @@ local checkplayer = NDCore.getPlayer()
 
 if checkplayer then
     for _, location in pairs(Config.locations) do
-        location.menu = lib.registerContext({
+        lib.registerContext({
             id = tostring(location.name) .. '_menu',
             title = location.name .. " Rental",
             options = getcars(location),
