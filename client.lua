@@ -78,20 +78,37 @@ end)
 -- Rentals
 function getcars(location)
     local cars = {}
-    local Cars2 = {}
     local cartable = {}
-    local cartable2 = {}
     Locationtbl = {}
-    local tcartable = {}
             local sruncount = 0
             for _, job in pairs(location.jobs) do
                 if tostring(NDCore.getPlayer().job) == tostring(job) then
-                       
                         for _, i in pairs(location.categories) do
+                                    for _, car in pairs(Config.cars[i]) do
+                                        if type(car) ~= "boolean" then
+                                            if car.ranks then
+                                                    for _, rank in pairs(car.ranks) do
+                                                        if not car.hasrun then
+                                                            if NDCore.getPlayer().job.rankName == rank then
+                                                                car.hasrun = true
+                                                                cartable[#cartable + 1] = (car)
+                                                            end
+                                                        end
+                                                    end
+                                                end
+                                            else
+                                                for _, car in pairs(Config.cars[i]) do
+                                                    if type(car) ~= "boolean" then
+                                                        if not car.hasrun then
+                                                            car.hasrun = true
+                                                            cartable[#cartable + 1] = (car)
+                                                        end
+                                                    end
+                                                end
+                                            end
+                                        end
+                                    end
                                 
-                                for _, car in pairs(Config.cars[i]) do
-                                        cartable[#cartable + 1] = (car)
-                                end
                                 for id, car in pairs(cartable) do
                                     if type(car) ~= "boolean" then
                               
@@ -212,3 +229,4 @@ if checkplayer then
     end
     peds()
 end
+
