@@ -102,6 +102,12 @@ function getcars(location)
                             end
                         end
                     end
+                    for _, i in pairs(location.categories) do
+                        for _, car in pairs(Config.cars[i]) do
+                            car.hasrun = false
+                        end
+                    end
+               
                 for id, car in pairs(cartable) do
                         cars[#cars + 1] = {
                             title = car.name,
@@ -219,4 +225,3 @@ if checkplayer then
     end
     peds()
 end
-
