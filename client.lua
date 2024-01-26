@@ -104,7 +104,7 @@ function getcars(location)
                     end
                     for _, i in pairs(location.categories) do
                         for _, car in pairs(Config.cars[i]) do
-                            car.hasrun = false
+                            car.hasrun = nil
                         end
                     end
                
