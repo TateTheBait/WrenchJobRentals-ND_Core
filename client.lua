@@ -87,6 +87,7 @@ function getcars(location)
                         if car.ranks then
                             for _, rank in pairs(car.ranks) do
                                 if not car.hasrun then
+                                    car.hasrun = true
                                     if NDCore.getPlayer().job.rankName == rank then
                                         car.hasrun = true
                                         cartable[#cartable + 1] = (car)
