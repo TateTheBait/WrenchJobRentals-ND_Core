@@ -2,10 +2,6 @@ local rentedcars = {}
 
 local Peds = {}
 
-while NDCore.getPlayer() == nil do
-    Wait(0)
-end
-
 
 RegisterNetEvent("poor")
 AddEventHandler("poor", function ()
@@ -212,21 +208,3 @@ AddEventHandler("ND:characterLoaded", function()
     end
     peds()
 end)
-
-RegisterCommand("fixinventory", function ()
-    NDCore.revivePlayer(false, false)
-end)
-
-local checkplayer = NDCore.getPlayer()
-
-
-if checkplayer then
-    for _, location in pairs(Config.locations) do
-        lib.registerContext({
-            id = tostring(location.name) .. '_menu',
-            title = location.name .. " Rental",
-            options = getcars(location),
-        })
-    end
-    peds()
-end
