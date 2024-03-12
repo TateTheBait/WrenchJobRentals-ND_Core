@@ -1,5 +1,5 @@
 author "The Wrench"
-description "Leo car renting"
+description "Wrench Job Rentals"
 version "1.5"
 
 fx_version "cerulean"
