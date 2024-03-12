@@ -2,9 +2,10 @@ local rentedcars = {}
 
 local Peds = {}
 
-while not NDCore.getPlayer().job do
+while NDCore.getPlayer() == nil do
     Wait(0)
 end
+
 
 RegisterNetEvent("poor")
 AddEventHandler("poor", function ()
