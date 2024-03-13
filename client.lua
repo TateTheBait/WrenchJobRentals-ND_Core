@@ -83,9 +83,8 @@ local function getcars(location)
                     for _, car in pairs(Config.cars[i]) do
                             if car.ranks then
                                 for _, rank in pairs(car.ranks) do
-                                    if not car.hasrun then
-                                        car.hasrun = true
-                                        if NDCore.getPlayer().job.rankName == rank then
+                                    if NDCore.getPlayer().jobInfo.rankName == rank then
+                                        if not car.hasrun then
                                             car.hasrun = true
                                             cartable[#cartable + 1] = (car)
                                         end
