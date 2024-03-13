@@ -205,7 +205,42 @@ RETURNVEHICLE = {
     icon = "caret-right"
 }
 
-function peds()
+
+local function spawnaiped(location)
+    local model = lib.requestModel(location.pedhash)
+    local ped = NDCore.createAiPed({
+        model = model, 
+        coords = vector4(location.pedlocation.x, location.pedlocation.y, location.pedlocation.z-1, location.pedlocation.w),
+        blip = {
+            sprite = 672,
+            color = 15, 
+            scale = 1,
+            label = location.name .. " Vehicle Rental"
+        },
+        anim = {
+            clip = "WORLD_HUMAN_COP_IDLES"
+        }, 
+        options = {
+            {
+                label = "Open Menu",
+                onSelect = function()
+                    lib.showContext(tostring(location.name) .. '_menu')
+                end,
+                icon = "car-rear"
+            }, 
+            RETURNVEHICLE
+        }
+    })
+    FreezeEntityPosition(ped, true)
+    SetEntityInvincible(ped, true)
+    SetBlockingOfNonTemporaryEvents(ped, true)
+    TaskStartScenarioInPlace(ped, "WORLD_HUMAN_COP_IDLES", 0, true)
+    Peds[#Peds+1] = ped
+end
+
+
+
+local function peds()
     for _, ped in pairs(Peds) do
         DeletePed(ped)
     end
@@ -217,55 +252,11 @@ function peds()
                     isgood = true
                 end
             end
-                if isgood == true then
-                    local model = lib.requestModel(location.pedhash)
-                    local ped = NDCore.createAiPed({
-                        model = model, 
-                        coords = vector4(location.pedlocation.x, location.pedlocation.y, location.pedlocation.z-1, location.pedlocation.w),
-                        blip = {
-                            sprite = 672,
-                            color = 15, 
-                            scale = 1,
-                            label = location.name .. " Vehicle Rental"
-                        },
-                        anim = {
-                            clip = "WORLD_HUMAN_COP_IDLES"
-                        }, 
-                        options = {
-                            {
-                                label = "Open Menu",
-                                onSelect = function()
-                                    lib.showContext(tostring(location.name) .. '_menu')
-                                end,
-                                icon = "car-rear"
-                            }, 
-                            RETURNVEHICLE
-                        }
-                    })
-                    FreezeEntityPosition(ped, true)
-                    SetEntityInvincible(ped, true)
-                    SetBlockingOfNonTemporaryEvents(ped, true)
-                    TaskStartScenarioInPlace(ped, "WORLD_HUMAN_COP_IDLES", 0, true)
-                    Peds[#Peds+1] = ped
-            end
         else
-            local model = lib.requestModel(location.pedhash)
-            local ped = CreatePed(4, model, location.pedlocation.x, location.pedlocation.y, location.pedlocation.z-1, location.pedlocation.w, false, false)
-            FreezeEntityPosition(ped, true)
-            SetEntityInvincible(created_ped, true)
-            SetBlockingOfNonTemporaryEvents(ped, true)
-            TaskStartScenarioInPlace(ped, "WORLD_HUMAN_COP_IDLES", 0, true)
-            local options2 = {
-                label = "Open Menu",
-                onSelect = function()
-                    lib.showContext(tostring(location.name) .. '_menu')
-                end,
-                icon = "car-rear"
-            }
-            exports.ox_target:addLocalEntity(ped, options2)
-            exports.ox_target:addLocalEntity(ped, RETURNVEHICLE)
-            
-            Peds[#Peds+1] = ped
+            isgood = true
+        end
+        if isgood == true then
+            spawnaiped(location)
         end
     end
 end
@@ -274,6 +265,7 @@ RegisterNetEvent("ND:characterLoaded", function ()
     local player = NDCore.getPlayer()
     lib.notify({
         label = "Job Rental",
+        title = "Job Rentals",
         description = tostring(player.job) .. " Character Registered!"
     })
     for _, location in pairs(Config.locations) do
@@ -287,10 +279,23 @@ RegisterNetEvent("ND:characterLoaded", function ()
 end)
 
 
+AddEventHandler("ND:characterUnloaded", function(character)
+    if rentedcars.vehicle then
+        if GetVehicleBodyHealth(VEHICLE) >= 300 and DoesEntityExist(VEHICLE) then
+            TriggerServerEvent("Returned", cache.serverId, SelectedCar.price, rentedcars.vehicle, true, Netid)
+        else
+            TriggerServerEvent("Returned", cache.serverId, SelectedCar.price, rentedcars.vehicle, false, Netid)
+        end
+        rentedcars = {}
+    end
+end)
+
+
 if NDCore.getPlayer() ~= nil then
     local player = NDCore.getPlayer()
     lib.notify({
         label = "Job Rental",
+        title = "Job Rentals",
         description = tostring(player.job) .. " Character Registered!"
     })
     for _, location in pairs(Config.locations) do
