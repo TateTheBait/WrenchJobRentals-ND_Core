@@ -1,6 +1,6 @@
 local rentedcars = {}
 
-local Peds = {}
+local Pedtable = {}
 
 local blips = {}
 
@@ -244,13 +244,13 @@ local function spawnaiped(location)
     SetEntityInvincible(ped, true)
     SetBlockingOfNonTemporaryEvents(ped, true)
     TaskStartScenarioInPlace(ped, "WORLD_HUMAN_COP_IDLES", 0, true)
-    Peds[#Peds+1] = ped
+    Pedtable[#Pedtable+1] = ped
 end
 
 
 
 local function peds()
-    for _, ped in pairs(Peds) do
+    for _, ped in pairs(Pedtable) do
         DeletePed(ped)
     end
     for _, blip in pairs(blips) do
@@ -291,7 +291,7 @@ RegisterNetEvent("ND:characterLoaded", function ()
 end)
 
 
-AddEventHandler("ND:characterUnloaded", function(character)
+RegisterNetEvent("ND:characterUnloaded", function(character)
     if rentedcars.vehicle then
         if GetVehicleBodyHealth(VEHICLE) >= 300 and DoesEntityExist(VEHICLE) then
             TriggerServerEvent("Returned", cache.serverId, SelectedCar.price, rentedcars.vehicle, true, Netid)
@@ -299,6 +299,10 @@ AddEventHandler("ND:characterUnloaded", function(character)
             TriggerServerEvent("Returned", cache.serverId, SelectedCar.price, rentedcars.vehicle, false, Netid)
         end
         rentedcars = {}
+    end
+    for id, ped in pairs(Pedtable) do
+        NDCore.removeAiPed(ped)
+       Pedtable[id] = nil
     end
 end)
 
