@@ -2,6 +2,8 @@ local rentedcars = {}
 
 local Peds = {}
 
+local blips = {}
+
 
 RegisterNetEvent("poor", function ()
     lib.notify({
@@ -205,18 +207,25 @@ RETURNVEHICLE = {
     icon = "caret-right"
 }
 
+local function createblip(location)
+    AddTextEntry('BlipName', tostring(location.name) .. ' Vehicle Rental')
+    local blip = AddBlipForCoord(location.pedlocation)
+    SetBlipSprite(blip, 672)
+    SetBlipColour(blip, 47)
+    BeginTextCommandSetBlipName("BlipName")
+    EndTextCommandSetBlipName(blip)
+    SetBlipDisplay(blip, 2)
+    SetBlipAsShortRange(blip, true)
+    blips[#blips+1] = blip
+end
+
+
 
 local function spawnaiped(location)
     local model = lib.requestModel(location.pedhash)
     local ped = NDCore.createAiPed({
         model = model, 
         coords = vector4(location.pedlocation.x, location.pedlocation.y, location.pedlocation.z-1, location.pedlocation.w),
-        blip = {
-            sprite = 672,
-            color = 15, 
-            scale = 1,
-            label = location.name .. " Vehicle Rental"
-        },
         anim = {
             clip = "WORLD_HUMAN_COP_IDLES"
         }, 
@@ -231,6 +240,7 @@ local function spawnaiped(location)
             RETURNVEHICLE
         }
     })
+    createblip(location)
     FreezeEntityPosition(ped, true)
     SetEntityInvincible(ped, true)
     SetBlockingOfNonTemporaryEvents(ped, true)
@@ -243,6 +253,9 @@ end
 local function peds()
     for _, ped in pairs(Peds) do
         DeletePed(ped)
+    end
+    for _, blip in pairs(blips) do
+        RemoveBlip(blip)
     end
     for _, location in pairs(Config.locations) do
         local isgood = false
@@ -307,3 +320,4 @@ if NDCore.getPlayer() ~= nil then
     end
     peds()
 end
+
