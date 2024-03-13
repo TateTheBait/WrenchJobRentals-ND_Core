@@ -18,7 +18,7 @@ RegisterNetEvent("carRental:confirm", function(table)
     local veh = 0
     local car = table.car
     SelectedCar = table.car
-    lib.requestModel(car.hash)
+    RequestModel(car.hash)
     veh = CreateVehicle(car.hash, table.location.x, table.location.y, table.location.z, table.location.w, true, false)
     if car.vehicleextras then
         for eid, extra in pairs(car.vehicleextras) do
@@ -319,4 +319,3 @@ if NDCore.getPlayer() ~= nil then
     end
     peds()
 end
-
