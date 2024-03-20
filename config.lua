@@ -24,7 +24,7 @@ Config = {
                 price = Carprice, -- this can be changed independently it just has to be a number, this is for ease of access
                 hash = `police3`,
                 vehicleextras = {e1 = true, e2 = false, e3 = false, e4 = false, e5 = true, e6 = false, e7 = false, e8 = false, e9 = false, e10 = false, e11 = false, e12 = false, e13 = false, e14 = false}, -- YOU DONT HAVE TO ADD THIS | DELETE THIS LINE IF YOU WANT NO EXTRAS!!! | IF YOU DO HAVE THIS LINE SET ALL 1-14 DO NOT DELETE ANY!!!
-                ranks = {"Sherrif", "Captain"} -- OPTIONAL | CAN BE REMOVED OR ADDED | USES THE RANK NAME, NOT THE NUMBER!!!!!!!!!
+                ranks = {"Sherriff", "Captain"} -- OPTIONAL | CAN BE REMOVED OR ADDED | USES THE RANK NAME, NOT THE NUMBER!!!!!!!!!
             },
         },
     },
