@@ -19,7 +19,7 @@ RegisterNetEvent("carRental:confirm", function(table)
     local car = table.car
     SelectedCar = table.car
     RequestModel(car.hash)
-    While not HasModelLoaded(car.hash) do
+    while not HasModelLoaded(car.hash) do
         Wait(0)
     end
     veh = CreateVehicle(car.hash, table.location.x, table.location.y, table.location.z, table.location.w, true, false)
