@@ -20,6 +20,7 @@ RegisterNetEvent("carRental:confirm", function(table)
     SelectedCar = table.car
     RequestModel(car.hash)
     veh = CreateVehicle(car.hash, table.location.x, table.location.y, table.location.z, table.location.w, true, false)
+    SetModelAsNoLongerNeeded(car.hash)
     if car.vehicleextras then
         for eid, extra in pairs(car.vehicleextras) do
             SetVehicleExtra(veh, eid, extra)
