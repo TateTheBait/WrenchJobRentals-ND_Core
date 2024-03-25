@@ -1,6 +1,6 @@
 author "The Wrench"
 description "Wrench Job Rentals"
-version "1.5"
+version "4.3"
 
 fx_version "cerulean"
 game "gta5"
